@@ -1,0 +1,3032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issues Quiz | IQ Tech</title>
+
+<style>
+/* (Same CSS as before, only minor tweaks for MCQs) */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+header { width: 100%; background: #003366; color: white; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 10px 10px 0 0; margin-bottom: 10px; }
+nav { display: flex; justify-content: center; align-items: center; gap: 30px; background: #0055aa; padding: 12px; width: 100%; border-radius: 0 0 20px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+nav a { color: white; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s; }
+nav a:hover { color: #ffd700; }
+.page { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 1200px; align-items: flex-start; }
+.ad-side { width: 160px; background: #ddd; text-align: center; padding: 10px; font-weight: bold; border-radius: 10px; min-height: 300px; display: flex; justify-content: center; align-items: center; }
+.container { flex: 1; max-width: 900px; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 25px; box-shadow: 0 25px 60px rgba(0,0,0,0.35); padding: 40px; transition: 0.3s ease; }
+.ad-inline { margin: 20px 0; background: #ccc; padding: 15px; text-align: center; font-weight: bold; border-radius: 8px; }
+.setup { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.setup input { padding: 14px; border-radius: 12px; border: 1px solid #ddd; font-size: 15px; transition: 0.3s; }
+.setup input:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 10px rgba(30,60,114,0.3); }
+button { padding: 14px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s ease; }
+.start-btn { width: 100%; background: #1e3c72; color: white; margin-bottom: 15px; }
+.start-btn:hover { background: #2a5298; transform: translateY(-2px); }
+.nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+.nav-buttons button { background: #2a5298; color: white; flex: 1; }
+.nav-buttons button:hover { background: #1e3c72; }
+#submitAll { display: none; width: 100%; margin-top: 20px; background: #28a745; color: white; }
+#submitAll:hover { background: #1f7d36; }
+.timer { text-align: center; font-weight: bold; font-size: 18px; margin: 20px 0; color: #c0392b; }
+.question-box { background: #f8f9fb; padding: 18px; border-radius: 18px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.question-box p { margin-bottom: 8px; font-weight: 500; }
+.feedback { margin-top: 6px; font-weight: bold; }
+.correct { color: #28a745; }
+.wrong { color: #c0392b; }
+#scoreBox { margin-top: 20px; padding: 15px; border-radius: 15px; background: #eafaf1; border-left: 6px solid #28a745; font-weight: bold; text-align: center; font-size: 18px; }
+.ad-bottom { width: 100%; background: #ccc; text-align: center; padding: 15px; font-weight: bold; border-radius: 8px; margin-top: 20px; }
+@media(max-width:900px){ .ad-side { display: none; } .setup { grid-template-columns: 1fr; } }
+</style>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18044013441"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-18044013441');
+</script>
+</head>
+
+<body>
+
+<header>IQ Tech - Issues TRY Quiz</header>
+
+<nav>
+  <a href="topics.html">Topics</a>
+
+  <a href="about.html">About</a>
+</nav>
+
+<div class="page">
+  <div class="ad-side">Left Ad</div>
+
+  <div class="container">
+    <div class="ad-inline">Top Banner Ad</div>
+
+    <div class="setup">
+      <input type="number" id="range" placeholder="Number of Questions (e.g. 20)">
+      <input type="number" id="timeLimit" placeholder="Time (minutes)">
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+
+    <div class="timer" id="timer"></div>
+
+    <div class="ad-inline">In-Quiz Ad</div>
+
+    <div id="quizArea"></div>
+
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevPage()">Previous</button>
+      <button id="nextBtn" onclick="nextPage()">Next</button>
+    </div>
+
+    <button id="submitAll" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div id="scoreBox"></div>
+
+    <div class="ad-bottom">Bottom Banner Ad</div>
+  </div>
+
+  <div class="ad-side">Right Ad</div>
+</div>
+
+<script>
+// QUESTIONS - Now include options for MCQs
+const questionsOriginal = [
+ 
+ 
+  {
+    "q":"Which data structure uses the LIFO (Last In, First Out) principle?",
+    "options":[
+      "Queue",
+      "Stack",
+      "Array",
+      "Linked List"
+    ],
+    "answer":"Stack"
+  },
+  {
+    "q":"What is the time complexity of accessing an element in an array by index?",
+    "options":[
+      "O(1)",
+      "O(n)",
+      "O(log n)",
+      "O(n log n)"
+    ],
+    "answer":"O(1)"
+  },
+  {
+    "q":"Which of the following data structures allows insertion and deletion at both ends but not in the middle?",
+    "options":[
+      "Stack",
+      "Queue",
+      "Deque",
+      "Linked List"
+    ],
+    "answer":"Deque"
+  },
+  {
+    "q":"What is a key characteristic of a balanced Binary Search Tree (BST)?",
+    "options":[
+      "All nodes have two children.",
+      "The height of the left and right subtrees of any node differ by at most one.",
+      "All leaf nodes are at the same level.",
+      "It is a complete binary tree."
+    ],
+    "answer":"The height of the left and right subtrees of any node differ by at most one."
+  },
+  {
+    "q":"Which sorting algorithm has the best average-case time complexity among the following?",
+    "options":[
+      "Bubble Sort",
+      "Insertion Sort",
+      "Quick Sort",
+      "Merge Sort"
+    ],
+    "answer":"Merge Sort"
+  },
+  {
+    "q":"What is the time complexity of binary search?",
+    "options":[
+      "O(n)",
+      "O(log n)",
+      "O(n log n)",
+      "O(1)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which algorithm is commonly used to find the shortest path in a graph?",
+    "options":[
+      "Prim's Algorithm",
+      "Kruskal's Algorithm",
+      "Dijkstra's Algorithm",
+      "Floyd-Warshall Algorithm"
+    ],
+    "answer":"Dijkstra's Algorithm"
+  },
+  {
+    "q":"What does the Divide and Conquer strategy do?",
+    "options":[
+      "Combines solutions to sub-problems into the solution for the original problem.",
+      "Divides the problem into sub-problems of the same type.",
+      "Solves the simplest sub-problem directly.",
+      "All of the above."
+    ],
+    "answer":"All of the above."
+  },
+  {
+    "q":"What is the primary disadvantage of using brute force in algorithm design?",
+    "options":[
+      "It requires extensive knowledge of advanced data structures.",
+      "It is inefficient and can be computationally expensive.",
+      "It is difficult to implement and prone to errors.",
+      "It is only applicable to small-scale problems."
+    ],
+    "answer":"It is inefficient and can be computationally expensive."
+  },
+  {
+    "q":"Which data structure is commonly used in exhaustive search algorithms?",
+    "options":[
+      "Stacks",
+      "Queues",
+      "Priority queues",
+      "Recursion"
+    ],
+    "answer":"Stacks"
+  },
+  {
+    "q":"Which of the following statements is true about exhaustive search algorithms?",
+    "options":[
+      "They are always the most efficient solution.",
+      "They are primarily used for problem-solving in artificial intelligence.",
+      "They explore all possible solutions and find the global optimum.",
+      "They are most suitable for problems with large search spaces."
+    ],
+    "answer":"They explore all possible solutions and find the global optimum."
+  },
+  {
+    "q":"Which data structure is commonly used in brute force algorithms?",
+    "options":[
+      "Linked Lists",
+      "Trees",
+      "Hash Tables",
+      "Arrays"
+    ],
+    "answer":"Arrays"
+  },
+  {
+    "q":"How does an exhaustive search differ from a greedy algorithm?",
+    "options":[
+      "Exhaustive search explores all possible solutions, while greedy algorithms make locally optimal choices.",
+      "Exhaustive search requires fewer computational resources than greedy algorithms.",
+      "Greedy algorithms guarantee to find the optimal solution, while exhaustive search does not.",
+      "Greedy algorithms only apply to small-scale problems."
+    ],
+    "answer":"Exhaustive search explores all possible solutions, while greedy algorithms make locally optimal choices."
+  },
+  {
+    "q":"What is the primary advantage of using exhaustive search over other algorithms?",
+    "options":[
+      "It always finds the optimal solution.",
+      "It requires fewer computational resources.",
+      "It guarantees faster execution time.",
+      "It is more straightforward to implement."
+    ],
+    "answer":"It always finds the optimal solution."
+  },
+  {
+    "q":"Which of the following is NOT a characteristic of brute force algorithms?",
+    "options":[
+      "They explore all possible solutions.",
+      "They are based on exhaustive searches.",
+      "They often involve trying every possible option.",
+      "They are always the most efficient approach."
+    ],
+    "answer":"They are always the most efficient approach."
+  },
+  {
+    "q":"Which of the following is an example of a brute force algorithm?",
+    "options":[
+      "Binary Search",
+      "Dijkstra's Algorithm",
+      "Bubble Sort",
+      "Quick Sort"
+    ],
+    "answer":"Bubble Sort"
+  },
+  {
+    "q":"Which type of problems are most suitable for an exhaustive search approach?",
+    "options":[
+      "Problems with known suboptimal solutions.",
+      "Problems with overlapping subproblems.",
+      "Problems with a high degree of randomness.",
+      "Problems with limited solution spaces."
+    ],
+    "answer":"Problems with limited solution spaces."
+  },
+  {
+    "q":"What is brute force in the context of data structures?",
+    "options":[
+      "A strategy that uses the most straightforward approach to solve a problem.",
+      "A technique that prioritizes efficiency and speed.",
+      "A method that eliminates all possibilities to find the optimal solution.",
+      "A way to reduce the search space using heuristics."
+    ],
+    "answer":"A strategy that uses the most straightforward approach to solve a problem."
+  },
+  {
+    "q":"What is the output of the following Java code?\n\nString name = \"John\";\nSystem.out.println(name.length());",
+    "options":[
+      "3",
+      "4",
+      "5",
+      "Error"
+    ],
+    "answer":"4"
+  },
+  {
+    "q":"Big O notation is associated with _________.",
+    "options":[
+      "Best case and upper bound.",
+      "Average case and upper bound.",
+      "Worst case and upper bound.",
+      "Lower bound and worst case."
+    ],
+    "answer":"Worst case and upper bound."
+  },
+   {
+    "q":"Given the array 12, 45, 26, 18, 65, 20, how many comparisons will be done using linear search with a key of 20?",
+    "options":[
+      "1",
+      "2",
+      "6",
+      "4"
+    ],
+    "answer":"6"
+  },
+  {
+    "q":"A graph with numbers assigned to its edges is called ______.",
+    "options":[
+      "Weighted graph",
+      "Directed graph",
+      "Path graph",
+      "Numbered graph"
+    ],
+    "answer":"Weighted graph"
+  },
+  {
+    "q":"The time complexity of a divide and conquer algorithm can be expressed using the following:",
+    "options":[
+      "Big O notation",
+      "Theta notation",
+      "Omega notation",
+      "All of the above"
+    ],
+    "answer":"All of the above"
+  },
+  {
+    "q":"Given the sorted array 12, 20, 45, 56, 67 and a key of 45, how many comparisons are made in binary search?",
+    "options":[
+      "1",
+      "3",
+      "2",
+      "4"
+    ],
+    "answer":"1"
+  },
+  {
+    "q":"In the Tower of Hanoi problem, two or more discs can be moved at a time.",
+    "options":[
+      "True",
+      "False"
+    ],
+    "answer":"False"
+  },
+  {
+    "q":"Which traversal order does Depth-First Search (DFS) follow?",
+    "options":[
+      "Level by level",
+      "Breadth before depth",
+      "Visiting nodes deeply before moving to the next branch",
+      "Random traversal"
+    ],
+    "answer":"Visiting nodes deeply before moving to the next branch"
+  },
+  {
+    "q":"Which of the following is NOT a primitive data type in Java?",
+    "options":[
+      "int",
+      "boolean",
+      "String",
+      "double"
+    ],
+    "answer":"String"
+  },
+  {
+    "q":"Given that C(n) = 0.5n(n-1), approximately how much longer will an algorithm run if the input size is tripled?",
+    "options":[
+      "9 times",
+      "12 times",
+      "6 times",
+      "4 times"
+    ],
+    "answer":"9 times"
+  },
+  {
+    "q":"A mixture of natural language and programming language constructs is called ______.",
+    "options":[
+      "Code proper",
+      "Pseudocode",
+      "Program",
+      "Domain-specific language"
+    ],
+    "answer":"Pseudocode"
+  },
+  {
+    "q":"What is the first number in the Fibonacci sequence?",
+    "options":[
+      "0",
+      "1",
+      "2",
+      "-1"
+    ],
+    "answer":"0"
+  },
+  {
+    "q":"Given the sorted array 12, 20, 43, 56, 67 and a key of 43, how many comparisons are made in binary search?",
+    "options":[
+      "1",
+      "3",
+      "2",
+      "4"
+    ],
+    "answer":"1"
+  },
+  {
+    "q":"Which keyword is used to create an object in Java?",
+    "options":[
+      "class",
+      "new",
+      "object",
+      "create"
+    ],
+    "answer":"new"
+  },
+  {
+    "q":"Which special pointer indicates the absence of a node's successor?",
+    "options":[
+      "null",
+      "void",
+      "dangling",
+      "wild"
+    ],
+    "answer":"null"
+  },
+  {
+    "q":"What is the access modifier for a public member variable in a class?",
+    "options":[
+      "public",
+      "private",
+      "protected",
+      "default"
+    ],
+    "answer":"public"
+  },
+  {
+    "q":"What is the default value assigned to an uninitialized variable of type int in Java?",
+    "options":[
+      "0",
+      "1",
+      "-1",
+      "null"
+    ],
+    "answer":"0"
+  },
+  {
+    "q":"Which keyword is used to define a constant variable in Java?",
+    "options":[
+      "final",
+      "static",
+      "const",
+      "constant"
+    ],
+    "answer":"final"
+  },
+  {
+    "q":"Algorithms that require an exponential number of operations are practical for solving only problems of tiny size.",
+    "options":[
+      "True",
+      "False"
+    ],
+    "answer":"True"
+  },
+  {
+    "q":"Which of the following is NOT a characteristic of divide and conquer algorithms?",
+    "options":[
+      "They can often be parallelized.",
+      "They usually have a recursive structure.",
+      "They always have a time complexity of O(n log n).",
+      "They involve breaking down a problem into smaller subproblems."
+    ],
+    "answer":"They always have a time complexity of O(n log n)."
+  },
+  {
+    "q":"In the divide and conquer technique, what is the base case?",
+    "options":[
+      "The simplest form of the problem can be solved directly.",
+      "The largest subproblem that can be divided further.",
+      "The step where the solutions of the subproblems are combined.",
+      "The analysis of the algorithm's complexity."
+    ],
+    "answer":"The simplest form of the problem can be solved directly."
+  },
+  {
+    "q":"Which of the following is NOT a typical application of the divide and conquer technique?",
+    "options":[
+      "Sorting algorithms",
+      "Searching algorithms",
+      "Graph traversal algorithms",
+      "Matrix multiplication algorithms"
+    ],
+    "answer":"Graph traversal algorithms"
+  },
+  {
+    "q":"Which algorithm uses the divide and conquer technique to find the kth smallest element in an unsorted array?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Selection algorithm (QuickSelect)"
+    ],
+    "answer":"Selection algorithm (QuickSelect)"
+  },
+  {
+    "q":"What is the time complexity of the binary search algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which of the following is NOT a step in the divide and conquer technique?",
+    "options":[
+      "Combine",
+      "Analyze",
+      "Divide",
+      "Search"
+    ],
+    "answer":"Search"
+  },
+  {
+    "q":"Which algorithm uses divide and conquer to solve the maximum subarray sum problem efficiently in O(n log n) time?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Divide and Conquer algorithm"
+    ],
+    "answer":"Divide and Conquer algorithm"
+  },
+  {
+    "q":"The growth function O(n log n) represents which type of time complexity?",
+    "options":[
+      "Linear",
+      "Logarithmic",
+      "Quadratic",
+      "Superlinear"
+    ],
+    "answer":"Superlinear"
+  },
+  {
+    "q":"What is the time complexity of the Merge Sort algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(n log n)"
+  },
+  {
+    "q":"What does the 'conquer' step involve in the divide and conquer technique?",
+    "options":[
+      "Breaking down the problem into smaller subproblems.",
+      "Combining the solutions of the subproblems to obtain the final solution.",
+      "Iteratively reducing the problem size until it can be solved directly.",
+      "Analyzing the algorithm's complexity."
+    ],
+    "answer":"Combining the solutions of the subproblems to obtain the final solution."
+  },
+  {
+    "q":"Which data structure is commonly used to implement the divide and conquer technique?",
+    "options":[
+      "Arrays",
+      "Linked Lists",
+      "Stacks",
+      "Trees"
+    ],
+    "answer":"Trees"
+  },
+  {
+    "q":"What is the main advantage of using the divide and conquer technique?",
+    "options":[
+      "It guarantees a linear time complexity for all problems.",
+      "It reduces the space complexity of algorithms.",
+      "It allows for efficient parallelization of algorithms.",
+      "It eliminates the need for recursion."
+    ],
+    "answer":"It allows for efficient parallelization of algorithms."
+  },
+  {
+    "q":"The growth function O(log n) represents which type of time complexity?",
+    "options":[
+      "Linear",
+      "Logarithmic",
+      "Quadratic",
+      "Exponential"
+    ],
+    "answer":"Logarithmic"
+  },
+  {
+    "q":"Which algorithm uses divide and conquer to calculate the power of a number efficiently?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Exponentiation by Squaring"
+    ],
+    "answer":"Exponentiation by Squaring"
+  },
+  {
+    "q":"The growth function O(n²) represents which type of time complexity?",
+    "options":[
+      "Linear",
+      "Logarithmic",
+      "Quadratic",
+      "Exponential"
+    ],
+    "answer":"Quadratic"
+  },
+  {
+    "q":"What is the worst-case time complexity of the binary search algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which algorithm uses divide and conquer to multiply two polynomials efficiently?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Karatsuba algorithm"
+    ],
+    "answer":"Karatsuba algorithm"
+  },
+  {
+    "q":"What does the 'merge' step involve in the Merge Sort algorithm?",
+    "options":[
+      "Sorting the individual elements of the array.",
+      "Dividing the array into smaller subarrays.",
+      "Combining two sorted subarrays into a single sorted array.",
+      "Repeatedly partitioning the array into smaller sections."
+    ],
+    "answer":"Combining two sorted subarrays into a single sorted array."
+  },
+  {
+    "q":"Which algorithm uses the divide and conquer technique to solve the matrix multiplication problem?",
+    "options":[
+      "Prim's algorithm",
+      "Kruskal's algorithm",
+      "Strassen's algorithm",
+      "Floyd-Warshall algorithm"
+    ],
+    "answer":"Strassen's algorithm"
+  },
+  {
+    "q":"What is the worst-case time complexity of the Merge Sort algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(n log n)"
+  },
+  {
+    "q":"What is the average-case time complexity of the QuickSort algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(n log n)"
+  },
+  {
+    "q":"Which algorithm is commonly used to find the maximum subarray sum in linear time?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Kadane's algorithm"
+    ],
+    "answer":"Kadane's algorithm"
+  },
+  {
+    "q":"Which of the following is NOT a step in the divide and conquer technique?",
+    "options":[
+      "Divide",
+      "Combine",
+      "Analyze",
+      "Sort"
+    ],
+    "answer":"Sort"
+  },
+   {
+    "q":"Which notation is commonly used to represent the worst-case time complexity of an algorithm?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n²)"
+    ],
+    "answer":"O(n²)"
+  },
+  {
+    "q":"In divide and conquer, what does the 'divide' step involve?",
+    "options":[
+      "Breaking down the problem into smaller subproblems.",
+      "Combining the solutions of the subproblems to obtain the final solution.",
+      "Iteratively reducing the problem size until it can be solved directly.",
+      "Analyzing the algorithm's complexity."
+    ],
+    "answer":"Breaking down the problem into smaller subproblems."
+  },
+  {
+    "q":"Which of the following best describes a growth function?",
+    "options":[
+      "An algorithm that solves a problem using a divide-and-conquer approach.",
+      "A mathematical function that describes the resource usage of an algorithm as the input size increases.",
+      "A technique for optimizing data structures to minimize memory consumption.",
+      "A measure of the complexity of an algorithm based on the number of operations it performs."
+    ],
+    "answer":"A mathematical function that describes the resource usage of an algorithm as the input size increases."
+  },
+  {
+    "q":"Which algorithm efficiently solves the maximum subarray sum problem in O(n) time?",
+    "options":[
+      "QuickSort",
+      "MergeSort",
+      "Binary Search",
+      "Kadane's algorithm"
+    ],
+    "answer":"Kadane's algorithm"
+  },
+  {
+    "q":"The growth function O(n!) represents which type of time complexity?",
+    "options":[
+      "Linear",
+      "Logarithmic",
+      "Factorial",
+      "Exponential"
+    ],
+    "answer":"Factorial"
+  },
+  {
+    "q":"What is the critical difference between the greedy technique and dynamic programming?",
+    "options":[
+      "Greedy technique uses a top-down approach, while dynamic programming uses a bottom-up approach.",
+      "Greedy technique solves problems recursively, while dynamic programming solves them iteratively.",
+      "The greedy technique finds the optimal solution at each step, while dynamic programming stores and reuses solutions to subproblems.",
+      "Greedy technique is faster than dynamic programming for all types of problems."
+    ],
+    "answer":"The greedy technique finds the optimal solution at each step, while dynamic programming stores and reuses solutions to subproblems."
+  },
+  {
+    "q":"In dynamic programming, what does the principle of optimality state?",
+    "options":[
+      "The optimal solution to a problem can be constructed from optimal solutions to its subproblems.",
+      "The optimal solution can be obtained by making locally optimal choices.",
+      "The optimal solution can be found using divide and conquer.",
+      "The optimal solution can be derived using backtracking."
+    ],
+    "answer":"The optimal solution to a problem can be constructed from optimal solutions to its subproblems."
+  },
+  {
+    "q":"Which technique is generally faster in terms of runtime complexity?",
+    "options":[
+      "Greedy technique",
+      "Dynamic programming",
+      "Both techniques have the same runtime complexity.",
+      "The runtime complexity depends on the specific problem."
+    ],
+    "answer":"Greedy technique"
+  },
+  {
+    "q":"Which technique is more likely to find the optimal solution in a reasonable amount of time?",
+    "options":[
+      "Greedy technique",
+      "Dynamic programming",
+      "Both techniques have the same likelihood.",
+      "The likelihood depends on the specific problem."
+    ],
+    "answer":"Dynamic programming"
+  },
+  {
+    "q":"Which problems can be solved using the knapsack algorithm in dynamic programming?",
+    "options":[
+      "Scheduling problem",
+      "Bin packing problem",
+      "0/1 Knapsack problem",
+      "All of the above"
+    ],
+    "answer":"All of the above"
+  },
+  {
+    "q":"Which technique is more suitable for solving problems that involve finding the shortest or longest path in a graph?",
+    "options":[
+      "Greedy technique",
+      "Dynamic programming",
+      "Both techniques are equally suitable.",
+      "Neither technique is suitable."
+    ],
+    "answer":"Dynamic programming"
+  },
+  {
+    "q":"Which of the following is a common approach to optimizing the space complexity in dynamic programming?",
+    "options":[
+      "Using a bottom-up approach",
+      "Using a top-down approach",
+      "Using memoization",
+      "Using tabulation"
+    ],
+    "answer":"Using tabulation"
+  },
+  {
+    "q":"In the greedy technique, which strategy involves making the choice that looks best now?",
+    "options":[
+      "Divide and conquer",
+      "Backtracking",
+      "Dynamic programming",
+      "Greedy choice property"
+    ],
+    "answer":"Greedy choice property"
+  },
+  {
+    "q":"Which of the following is an example of a problem that can be solved using both the greedy technique and dynamic programming?",
+    "options":[
+      "Longest Increasing Subsequence",
+      "Shortest Path in a Graph",
+      "Matrix Chain Multiplication",
+      "Sudoku Solving"
+    ],
+    "answer":"Longest Increasing Subsequence"
+  },
+  {
+    "q":"Which of the following problems can be solved using the greedy technique?",
+    "options":[
+      "Traveling Salesman Problem",
+      "Knapsack Problem",
+      "Longest Common Subsequence Problem",
+      "Minimum Spanning Tree Problem"
+    ],
+    "answer":"Minimum Spanning Tree Problem"
+  },
+  {
+    "q":"Which of the following problems cannot be solved optimally using the greedy technique?",
+    "options":[
+      "Huffman Coding",
+      "Job Sequencing with Deadlines",
+      "Activity Selection Problem",
+      "Coin Change Problem"
+    ],
+    "answer":"Job Sequencing with Deadlines"
+  },
+  {
+    "q":"Which of the following problems can be efficiently solved using dynamic programming?",
+    "options":[
+      "Traveling Salesman Problem",
+      "Knapsack Problem",
+      "Longest Common Subsequence Problem",
+      "All of the above"
+    ],
+    "answer":"All of the above"
+  },
+  {
+    "q":"Which of the following is necessary for a problem to be solved using dynamic programming?",
+    "options":[
+      "Optimal substructure",
+      "Additive subproblems",
+      "Greedy choice property",
+      "Recursive subproblems"
+    ],
+    "answer":"Optimal substructure"
+  },
+  {
+    "q":"Which of the following is a disadvantage of dynamic programming?",
+    "options":[
+      "It can only be applied to problems with overlapping subproblems.",
+      "It has a high time complexity.",
+      "It requires extensive recursion.",
+      "It can have a high memory requirement for large problem instances."
+    ],
+    "answer":"It can have a high memory requirement for large problem instances."
+  },
+  {
+    "q":"Which technique is more suitable for solving problems that exhibit the greedy choice property?",
+    "options":[
+      "Greedy technique",
+      "Dynamic programming",
+      "Both techniques are equally suitable.",
+      "Neither technique can handle such problems."
+    ],
+    "answer":"Greedy technique"
+  },
+  {
+    "q":"Which technique is more suitable for solving problems with overlapping subproblems?",
+    "options":[
+      "Greedy technique",
+      "Dynamic programming",
+      "Both techniques are equally suitable.",
+      "Neither technique can handle overlapping subproblems."
+    ],
+    "answer":"Dynamic programming"
+  },
+  {
+    "q":"Which of the following is an advantage of the greedy technique?",
+    "options":[
+      "It always guarantees the optimal solution.",
+      "It is faster than dynamic programming for all types of problems.",
+      "It is easy to implement.",
+      "It can solve NP-hard problems efficiently."
+    ],
+    "answer":"It is easy to implement."
+  },
+  {
+    "q":"Which algorithm is commonly used to solve the Activity Selection Problem using the greedy technique?",
+    "options":[
+      "Dijkstra's Algorithm",
+      "Kruskal's Algorithm",
+      "Earliest Finish Time algorithm",
+      "Merge Sort"
+    ],
+    "answer":"Earliest Finish Time algorithm"
+  },
+  {
+    "q":"Which algorithm is a classic example of a greedy algorithm?",
+    "options":[
+      "Merge Sort",
+      "Binary Search",
+      "Huffman Coding",
+      "Tower of Hanoi"
+    ],
+    "answer":"Huffman Coding"
+  },
+  {
+    "q":"Which dynamic programming algorithm is commonly used to find the shortest path between all pairs of vertices in a graph?",
+    "options":[
+      "Prim's Algorithm",
+      "Kruskal's Algorithm",
+      "Floyd-Warshall Algorithm",
+      "Depth-First Search"
+    ],
+    "answer":"Floyd-Warshall Algorithm"
+  },
+  {
+    "q":"Which algorithm uses dynamic programming to compute the shortest path from a single source?",
+    "options":[
+      "Bellman-Ford Algorithm",
+      "Quick Sort",
+      "Binary Search",
+      "Heap Sort"
+    ],
+    "answer":"Bellman-Ford Algorithm"
+  },
+  {
+    "q":"Which property is essential for applying the greedy method successfully?",
+    "options":[
+      "Optimal substructure",
+      "Greedy choice property",
+      "Backtracking property",
+      "Recursion property"
+    ],
+    "answer":"Greedy choice property"
+  },
+  {
+    "q":"Which property is required for a problem to be solved efficiently using dynamic programming?",
+    "options":[
+      "Greedy choice property only",
+      "Overlapping subproblems only",
+      "Optimal substructure and overlapping subproblems",
+      "Recursion only"
+    ],
+    "answer":"Optimal substructure and overlapping subproblems"
+  },
+  {
+    "q":"Which of the following algorithms uses memoization?",
+    "options":[
+      "Dynamic Programming",
+      "Selection Sort",
+      "Bubble Sort",
+      "Breadth-First Search"
+    ],
+    "answer":"Dynamic Programming"
+  },
+  {
+    "q":"Memoization is primarily associated with which programming technique?",
+    "options":[
+      "Greedy Algorithms",
+      "Dynamic Programming",
+      "Divide and Conquer",
+      "Brute Force"
+    ],
+    "answer":"Dynamic Programming"
+  },
+  {
+    "q":"Tabulation is also known as which dynamic programming approach?",
+    "options":[
+      "Top-down",
+      "Bottom-up",
+      "Recursive",
+      "Greedy"
+    ],
+    "answer":"Bottom-up"
+  },
+  {
+    "q":"Memoization is also known as which dynamic programming approach?",
+    "options":[
+      "Top-down",
+      "Bottom-up",
+      "Greedy",
+      "Breadth-first"
+    ],
+    "answer":"Top-down"
+  },
+  {
+    "q":"Which of the following algorithms is NOT a dynamic programming algorithm?",
+    "options":[
+      "Floyd-Warshall",
+      "Bellman-Ford",
+      "Longest Common Subsequence",
+      "Selection Sort"
+    ],
+    "answer":"Selection Sort"
+  },
+  {
+    "q":"Which algorithm is commonly used to solve the Longest Common Subsequence problem?",
+    "options":[
+      "Dynamic Programming",
+      "Greedy Algorithm",
+      "Quick Sort",
+      "Binary Search"
+    ],
+    "answer":"Dynamic Programming"
+  },
+  {
+    "q":"Which algorithm is commonly used to solve the Matrix Chain Multiplication problem?",
+    "options":[
+      "Dynamic Programming",
+      "Bubble Sort",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ],
+    "answer":"Dynamic Programming"
+  },
+  {
+    "q":"Which algorithm is commonly used to solve the 0/1 Knapsack problem optimally?",
+    "options":[
+      "Dynamic Programming",
+      "Greedy Algorithm",
+      "Quick Sort",
+      "Selection Sort"
+    ],
+    "answer":"Dynamic Programming"
+  },
+  {
+    "q":"Which of the following is an example of an NP-hard problem?",
+    "options":[
+      "Binary Search",
+      "Merge Sort",
+      "Traveling Salesman Problem",
+      "Linear Search"
+    ],
+    "answer":"Traveling Salesman Problem"
+  },
+  {
+    "q":"Which search algorithm requires the data to be sorted before searching?",
+    "options":[
+      "Linear Search",
+      "Binary Search",
+      "Depth-First Search",
+      "Breadth-First Search"
+    ],
+    "answer":"Binary Search"
+  },
+  {
+    "q":"Which search algorithm checks each element one by one until the target is found?",
+    "options":[
+      "Binary Search",
+      "Linear Search",
+      "Interpolation Search",
+      "Jump Search"
+    ],
+    "answer":"Linear Search"
+  },
+  {
+    "q":"Which notation describes the upper bound of an algorithm's running time?",
+    "options":[
+      "Big O",
+      "Big Omega",
+      "Big Theta",
+      "Little o"
+    ],
+    "answer":"Big O"
+  },
+   {
+    "q":"What is the time complexity of binary search in the worst case?",
+    "options":[
+      "O(log n)",
+      "O(n²)",
+      "O(1)",
+      "O(n)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which special pointer indicates the absence of a node’s successor?",
+    "options":[
+      "wild",
+      "void",
+      "null",
+      "dangling"
+    ],
+    "answer":"null"
+  },
+  {
+    "q":"The common underlying data structure used to implement a dynamic array is a ____.",
+    "options":[
+      "hash table",
+      "linked list",
+      "heap",
+      "array"
+    ],
+    "answer":"array"
+  },
+  {
+    "q":"Which of these is the most time-consuming operation?",
+    "options":[
+      "subtraction",
+      "division",
+      "addition",
+      "multiplication"
+    ],
+    "answer":"division"
+  },
+  {
+    "q":"Using Euclid’s algorithm, how many modulo operations will be performed on 80 and 20 in order to find the GCD?",
+    "options":[
+      "20",
+      "2",
+      "80",
+      "1"
+    ],
+    "answer":"1"
+  },
+   {
+    "q":"Given the array 12, 45, 26, 18, 65, 20, how many comparisons will be done using linear search with a key of 18?",
+    "options":[
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer":"4"
+  },
+  {
+    "q":"Given that C(n) = 0.5n(n-1), how long will an algorithm run if we triple the input size?",
+    "options":[
+      "9",
+      "4",
+      "6",
+      "12"
+    ],
+    "answer":"9"
+  },
+  {
+    "q":"Consider the following code snippet:\nfor i in range(n):\n    for j in range(n):\n        for k in range(n):\n            print(i, j, k)\n\nWhat is the running time of this code snippet?",
+    "options":[
+      "O(n³)",
+      "O(1)",
+      "O(n²)",
+      "O(n)"
+    ],
+    "answer":"O(n³)"
+  },
+  {
+    "q":"Binary search cannot be used if the elements in the array are:",
+    "options":[
+      "Characters",
+      "Floating-point numbers",
+      "Strings",
+      "Floating-point numbers and Strings"
+    ],
+    "answer":"Floating-point numbers and Strings"
+  },
+  {
+    "q":"Theta is associated with _____.",
+    "options":[
+      "average case and exact bound",
+      "worst case and upper bound",
+      "average case and lower bound",
+      "best case and lower bound"
+    ],
+    "answer":"average case and exact bound"
+  },
+  {
+    "q":"The common underlying data structure used to implement a set is a ____.",
+    "options":[
+      "heap",
+      "linked list",
+      "binary search tree",
+      "array"
+    ],
+    "answer":"binary search tree"
+  },
+  {
+    "q":"Using Euclid’s algorithm, how many modulo operations will be performed on 70 and 25 in order to find the GCD?",
+    "options":[
+      "70",
+      "25",
+      "3",
+      "2"
+    ],
+    "answer":"3"
+  },
+  {
+    "q":"The process of converting a list of elements into ascending or descending order is called _____.",
+    "options":[
+      "arranging",
+      "ordering",
+      "searching",
+      "sorting"
+    ],
+    "answer":"sorting"
+  },
+  {
+    "q":"What is the Big O notation of the function 5 + 6N + 7N²?",
+    "options":[
+      "O(N²)",
+      "O(N)",
+      "O(1)",
+      "O(N³)"
+    ],
+    "answer":"O(N²)"
+  },
+  {
+    "q":"The common underlying data structure used to implement a stack is a ____.",
+    "options":[
+      "heap",
+      "hash table",
+      "array",
+      "linked list"
+    ],
+    "answer":"array"
+  },
+  {
+    "q":"What is the Big O notation of the function 2N + 2?",
+    "options":[
+      "O(N²)",
+      "none of these",
+      "O(N³)",
+      "O(1)"
+    ],
+    "answer":"none of these"
+  },
+  {
+    "q":"Arrange the following order of growth in ascending order:\n1. Linear\n2. Logarithmic\n3. Quadratic\n4. Cubic",
+    "options":[
+      "3,2,1,4",
+      "2,1,3,4",
+      "1,2,4,3",
+      "4,3,1,2"
+    ],
+    "answer":"2,1,3,4"
+  },
+  {
+    "q":"Which of these is an algorithm design technique?",
+    "options":[
+      "binary search",
+      "secondary operation",
+      "brute force",
+      "basic operation"
+    ],
+    "answer":"brute force"
+  },
+  {
+    "q":"Binary search is a _____ search algorithm.",
+    "options":[
+      "Both recursive and iterative",
+      "Recursive",
+      "None of these",
+      "Iterative"
+    ],
+    "answer":"Both recursive and iterative"
+  },
+  {
+    "q":"Given the array 12, 45, 67, 56, 20 and a key of 20, how many comparisons will be done in binary search?",
+    "options":[
+      "4",
+      "1",
+      "3",
+      "2"
+    ],
+    "answer":"3"
+  },
+   {
+    "q":"A graph with numbers assigned to its edges is called ______.",
+    "options":[
+      "numbered graph",
+      "weighted graph",
+      "path graph",
+      "directed graph"
+    ],
+    "answer":"weighted graph"
+  },
+  {
+    "q":"Given that C(n) = 0.5n(n-1), how long will an algorithm run if we double the input size?",
+    "options":[
+      "4",
+      "9",
+      "16",
+      "12"
+    ],
+    "answer":"4"
+  },
+  {
+    "q":"Given that C(n) = 0.5n(n-1), how long will an algorithm run if we quadruple the input size?",
+    "options":[
+      "12",
+      "4",
+      "9",
+      "16"
+    ],
+    "answer":"16"
+  },
+  {
+    "q":"What is the order of growth for an algorithm that takes constant time regardless of the input size?",
+    "options":[
+      "O(n)",
+      "O(n log n)",
+      "O(log n)",
+      "O(1)"
+    ],
+    "answer":"O(1)"
+  },
+  {
+    "q":"Consider the following code snippet:\n\nfor i in range(n):\n    for j in range(n):\n        for k in range(n):\n            for l in range(n):\n                print(i, j, k, l)\n\nWhat is the running time of this code snippet?",
+    "options":[
+      "O(n²)",
+      "O(n⁴)",
+      "O(1)",
+      "O(n)"
+    ],
+    "answer":"O(n⁴)"
+  },
+  {
+    "q":"Consider the following code snippet:\n\ni = 1\nwhile i < n:\n    print(i)\n    i *= 2\n\nWhat is the running time of this code snippet?",
+    "options":[
+      "O(log n)",
+      "O(n)",
+      "O(1)",
+      "O(n log n)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"In the Tower of Hanoi problem, two or more discs can be moved at a time.",
+    "options":[
+      "false",
+      "true"
+    ],
+    "answer":"false"
+  },
+  {
+    "q":"The common underlying data structure used to implement a priority queue is a ____.",
+    "options":[
+      "hash table",
+      "array",
+      "heap",
+      "linked list"
+    ],
+    "answer":"heap"
+  },
+  {
+    "q":"A graph that has no cycles but is not necessarily connected is called a ______.",
+    "options":[
+      "tree",
+      "forest",
+      "acyclic graph",
+      "free tree"
+    ],
+    "answer":"forest"
+  },
+  {
+    "q":"Given the array 12, 45, 67, 56, 20 and a key of 45, how many comparisons will be made in binary search?",
+    "options":[
+      "2",
+      "1",
+      "3",
+      "4"
+    ],
+    "answer":"2"
+  },
+  {
+    "q":"A mixture of natural language and programming language-like constructs is called _____.",
+    "options":[
+      "none of these",
+      "code proper",
+      "pseudocode",
+      "program"
+    ],
+    "answer":"pseudocode"
+  },
+  {
+    "q":"Which of the following contributes most towards the running time of an algorithm?",
+    "options":[
+      "primary operation",
+      "basic operation",
+      "RAM",
+      "unit operation"
+    ],
+    "answer":"basic operation"
+  },
+  {
+    "q":"Using Euclid’s algorithm, how many modulo operations will be performed on 60 and 24 to find the GCD?",
+    "options":[
+      "64",
+      "12",
+      "24",
+      "2"
+    ],
+    "answer":"2"
+  },
+  {
+    "q":"In empirical analysis, a physical unit of time is used.",
+    "options":[
+      "true",
+      "false"
+    ],
+    "answer":"true"
+  },
+  {
+    "q":"Omega is associated with _____.",
+    "options":[
+      "best case and lower bound",
+      "worst case and upper bound",
+      "best case and upper bound",
+      "average case and upper bound"
+    ],
+    "answer":"best case and lower bound"
+  },
+   {
+    "q":"Binary search can be applied to which of the following data structures?",
+    "options":[
+      "All of these",
+      "Trees",
+      "Heaps",
+      "Graphs"
+    ],
+    "answer":"Trees"
+  },
+  {
+    "q":"Which of these is a constant operation?",
+    "options":[
+      "factorial",
+      "string concatenation",
+      "addition",
+      "loops"
+    ],
+    "answer":"addition"
+  },
+  {
+    "q":"Which of the following order of growth represents the fastest-growing time complexity?",
+    "options":[
+      "O(n log n)",
+      "O(n²)",
+      "O(log n)",
+      "O(n)"
+    ],
+    "answer":"O(n²)"
+  },
+  {
+    "q":"In Euclid’s algorithm, when do we return m?",
+    "options":[
+      "when n is 0",
+      "when m mod n is 0",
+      "when the value of m is 0",
+      "when n is not divisible by 2"
+    ],
+    "answer":"when n is 0"
+  },
+  {
+    "q":"Big O is associated with _________.",
+    "options":[
+      "best case and upper bound",
+      "lower bound and worst case",
+      "average case and upper bound",
+      "worst case and upper bound"
+    ],
+    "answer":"worst case and upper bound"
+  },
+  {
+    "q":"With linear search, it is essential that before a search is performed, the array must be sorted.",
+    "options":[
+      "true",
+      "false"
+    ],
+    "answer":"false"
+  },
+  {
+    "q":"Which of these is correct when g(n) = n²?",
+    "options":[
+      "n³ ∈ O(g(n))",
+      "n⁴ ∈ O(g(n))",
+      "None of these",
+      "n ∈ Ω(g(n))"
+    ],
+    "answer":"n³ ∈ O(g(n))"
+  },
+  {
+    "q":"Algorithms that require an exponential number of operations are practical for solving only problems of very small size.",
+    "options":[
+      "true",
+      "false"
+    ],
+    "answer":"true"
+  },
+  {
+    "q":"In the Tower of Hanoi problem, two or more discs can be moved at a time.",
+    "options":[
+      "true",
+      "false"
+    ],
+    "answer":"false"
+  },
+  {
+    "q":"Which of the following order of growth represents the slowest-growing time complexity?",
+    "options":[
+      "O(n log n)",
+      "O(1)",
+      "O(n)",
+      "O(n²)"
+    ],
+    "answer":"O(1)"
+  },
+  {
+    "q":"If an algorithm has a time complexity of O(n log n), how will its runtime grow as the input size increases?",
+    "options":[
+      "Logarithmically",
+      "Quadratically",
+      "Linearly",
+      "Superlinearly"
+    ],
+    "answer":"Superlinearly"
+  },
+  {
+    "q":"Which of these is correct when g(n) = n³?",
+    "options":[
+      "n ∈ Ω(g(n))",
+      "n³ ∈ O(g(n))",
+      "n² ∈ Θ(g(n))",
+      "n⁴ ∈ O(g(n))"
+    ],
+    "answer":"n⁴ ∈ O(g(n))"
+  },
+  {
+    "q":"In theoretical analysis, a physical unit of time is used.",
+    "options":[
+      "false",
+      "true"
+    ],
+    "answer":"false"
+  },
+  {
+    "q":"Which of the following order of growth represents the fastest-growing time complexity?",
+    "options":[
+      "O(n²)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(n²)"
+  },
+  {
+    "q":"An operation that, for a given processor, always operates in the same amount of time, regardless of input values, is called ____.",
+    "options":[
+      "binary operation",
+      "basic operation",
+      "dynamic operation",
+      "constant operation"
+    ],
+    "answer":"constant operation"
+  },
+   {
+    "q":"What is an algorithm?",
+    "options":[
+      "A programming language",
+      "A step-by-step procedure to solve a problem",
+      "A data structure",
+      "A software application"
+    ],
+    "answer":"A step-by-step procedure to solve a problem"
+  },
+  {
+    "q":"Which of the following is a characteristic of a good algorithm?",
+    "options":[
+      "Efficiency",
+      "Complexity",
+      "Ambiguity",
+      "Redundancy"
+    ],
+    "answer":"Efficiency"
+  },
+  {
+    "q":"What does time complexity of an algorithm signify?",
+    "options":[
+      "Amount of memory used",
+      "Amount of time taken to run as a function of input size",
+      "Number of algorithms executed",
+      "Number of recursive calls"
+    ],
+    "answer":"Amount of time taken to run as a function of input size"
+  },
+  {
+    "q":"Big O notation expresses:",
+    "options":[
+      "Best-case complexity",
+      "Average-case complexity",
+      "Worst-case complexity",
+      "Exact complexity"
+    ],
+    "answer":"Worst-case complexity"
+  },
+  {
+    "q":"Which notation represents the upper bound of an algorithm's running time?",
+    "options":[
+      "Big O (O)",
+      "Big Theta (Θ)",
+      "Big Omega (Ω)",
+      "Little o (o)"
+    ],
+    "answer":"Big O (O)"
+  },
+  {
+    "q":"What is the average-case time complexity of binary search?",
+    "options":[
+      "O(n)",
+      "O(n log n)",
+      "O(log n)",
+      "O(1)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which is true about recursion?",
+    "options":[
+      "It always improves the performance",
+      "It sometimes leads to infinite loops",
+      "It cannot be replaced with iteration",
+      "It uses a stack data structure"
+    ],
+    "answer":"It uses a stack data structure"
+  },
+  {
+    "q":"A recursive algorithm must have:",
+    "options":[
+      "Multiple base cases",
+      "No base case",
+      "At least one base case",
+      "Iterative base case"
+    ],
+    "answer":"At least one base case"
+  },
+  {
+    "q":"What is iteration in algorithms?",
+    "options":[
+      "Repeating a set of instructions",
+      "Defining a function",
+      "Creating a data structure",
+      "Debugging a program"
+    ],
+    "answer":"Repeating a set of instructions"
+  },
+  {
+    "q":"Which strategy involves breaking a problem into subproblems, solving them independently, and combining their solutions?",
+    "options":[
+      "Dynamic programming",
+      "Greedy algorithms",
+      "Divide and conquer",
+      "Brute force"
+    ],
+    "answer":"Divide and conquer"
+  },
+  {
+    "q":"Dynamic programming is mainly used when:",
+    "options":[
+      "Problems have overlapping subproblems",
+      "Problems can be solved in polynomial time",
+      "Problems can be divided into subproblems",
+      "Problems are solved using recursion"
+    ],
+    "answer":"Problems have overlapping subproblems"
+  },
+  {
+    "q":"Which of the following is a greedy algorithm example?",
+    "options":[
+      "Binary search",
+      "Merge sort",
+      "Huffman coding",
+      "Quick sort"
+    ],
+    "answer":"Huffman coding"
+  },
+  {
+    "q":"Which approach involves checking all possible solutions to find the best one?",
+    "options":[
+      "Backtracking",
+      "Dynamic programming",
+      "Greedy algorithms",
+      "Brute force"
+    ],
+    "answer":"Brute force"
+  },
+  {
+    "q":"Which algorithmic technique involves exploring all possible solutions to find the correct one by undoing wrong decisions?",
+    "options":[
+      "Greedy algorithms",
+      "Backtracking",
+      "Dynamic programming",
+      "Divide and conquer"
+    ],
+    "answer":"Backtracking"
+  },
+  {
+    "q":"Which of the following is a type of linked list?",
+    "options":[
+      "Single-ended",
+      "Double-ended",
+      "Singly linked",
+      "Circular"
+    ],
+    "answer":"Singly linked"
+  },
+  {
+    "q":"A stack follows which principle?",
+    "options":[
+      "FIFO",
+      "LIFO",
+      "LILO",
+      "FILO"
+    ],
+    "answer":"LIFO"
+  },
+  {
+    "q":"In which data structure do we use enqueue and dequeue operations?",
+    "options":[
+      "Stack",
+      "Queue",
+      "Linked list",
+      "Tree"
+    ],
+    "answer":"Queue"
+  },
+  {
+    "q":"Which of the following is a self-balancing binary search tree?",
+    "options":[
+      "Binary tree",
+      "AVL tree",
+      "Binary search tree",
+      "B-tree"
+    ],
+    "answer":"AVL tree"
+  },
+  {
+    "q":"Which algorithm is used to find the shortest path in an unweighted graph?",
+    "options":[
+      "Dijkstra’s algorithm",
+      "Bellman-Ford algorithm",
+      "BFS (Breadth-First Search)",
+      "DFS (Depth-First Search)"
+    ],
+    "answer":"BFS (Breadth-First Search)"
+  },
+  {
+    "q":"Which sort algorithm has the worst-case time complexity of O(n²)?",
+    "options":[
+      "Merge sort",
+      "Quick sort",
+      "Heap sort",
+      "Bubble sort"
+    ],
+    "answer":"Bubble sort"
+  },
+  {
+    "q":"Which of the following is a comparison-based sorting algorithm?",
+    "options":[
+      "Counting sort",
+      "Radix sort",
+      "Bucket sort",
+      "Insertion sort"
+    ],
+    "answer":"Insertion sort"
+  },
+  {
+    "q":"In a binary search tree, for any node with value X, the values in the left subtree are:",
+    "options":[
+      "Greater than X",
+      "Less than or equal to X",
+      "Less than X",
+      "Greater than or equal to X"
+    ],
+    "answer":"Less than X"
+  },
+  {
+    "q":"Which of the following algorithms is not used for finding the minimum spanning tree?",
+    "options":[
+      "Prim’s algorithm",
+      "Kruskal’s algorithm",
+      "Borůvka’s algorithm",
+      "Dijkstra’s algorithm"
+    ],
+    "answer":"Dijkstra’s algorithm"
+  },
+  {
+    "q":"Which of the following problems can be solved using dynamic programming?",
+    "options":[
+      "Fibonacci sequence",
+      "Tower of Hanoi",
+      "Hamiltonian path",
+      "Knapsack problem"
+    ],
+    "answer":"Knapsack problem"
+  },
+  {
+    "q":"Which is true about the BFS algorithm?",
+    "options":[
+      "It uses a stack",
+      "It uses a queue",
+      "It uses a priority queue",
+      "It uses a list"
+    ],
+    "answer":"It uses a queue"
+  },
+  {
+    "q":"In the context of graph algorithms, what is a cycle?",
+    "options":[
+      "A path that visits all nodes exactly once",
+      "A path that starts and ends at the same node",
+      "A path with no repeated nodes",
+      "A path that does not exist"
+    ],
+    "answer":"A path that starts and ends at the same node"
+  },
+  {
+    "q":"Which data structure is used in the implementation of DFS?",
+    "options":[
+      "Queue",
+      "Stack",
+      "Priority queue",
+      "Linked list"
+    ],
+    "answer":"Stack"
+  },
+  {
+    "q":"What is the average-case time complexity of Merge Sort?",
+    "options":[
+      "O(n)",
+      "O(n log n)",
+      "O(log n)",
+      "O(n²)"
+    ],
+    "answer":"O(n log n)"
+  },
+  {
+    "q":"Which of the following algorithms is used for solving the single-source shortest path problem in a graph with non-negative weights?",
+    "options":[
+      "Bellman-Ford algorithm",
+      "Floyd-Warshall algorithm",
+      "Dijkstra’s algorithm",
+      "A* algorithm"
+    ],
+    "answer":"Dijkstra’s algorithm"
+  },
+  {
+    "q":"In which scenario is the Quicksort algorithm not suitable?",
+    "options":[
+      "When the data set is already sorted",
+      "When the data set is very large",
+      "When the data set is small",
+      "When the data set contains many duplicate values"
+    ],
+    "answer":"When the data set contains many duplicate values"
+  },
+  {
+    "q":"Which algorithmic paradigm involves solving problems by combining solutions to subproblems of the same type?",
+    "options":[
+      "Dynamic programming",
+      "Greedy algorithms",
+      "Divide and conquer",
+      "Backtracking"
+    ],
+    "answer":"Divide and conquer"
+  },
+  {
+    "q":"Which of the following is NOT a characteristic of a greedy algorithm?",
+    "options":[
+      "Local optimal choice",
+      "Optimal substructure",
+      "Overlapping subproblems",
+      "Feasibility"
+    ],
+    "answer":"Overlapping subproblems"
+  },
+  {
+    "q":"What is the purpose of memoization in dynamic programming?",
+    "options":[
+      "To increase time complexity",
+      "To reduce time complexity",
+      "To reduce space complexity",
+      "To find the optimal solution"
+    ],
+    "answer":"To reduce time complexity"
+  },
+  {
+    "q":"Which data structure is typically used to implement priority queues?",
+    "options":[
+      "Stack",
+      "Queue",
+      "Heap",
+      "Linked list"
+    ],
+    "answer":"Heap"
+  },
+  {
+    "q":"What is the time complexity of inserting an element into a binary heap?",
+    "options":[
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answer":"O(log n)"
+  },
+  {
+    "q":"Which of the following problems is NP-complete?",
+    "options":[
+      "Binary search",
+      "Sorting",
+      "Travelling Salesman Problem",
+      "Matrix multiplication"
+    ],
+    "answer":"Travelling Salesman Problem"
+  },
+  {
+    "q":"Which of the following algorithms is used to find the Longest Common Subsequence?",
+    "options":[
+      "Dynamic programming",
+      "Greedy algorithms",
+      "Divide and conquer",
+      "Backtracking"
+    ],
+    "answer":"Dynamic programming"
+  },
+  {
+    "q":"Which of the following is a characteristic of the backtracking algorithm?",
+    "options":[
+      "It never considers all possible solutions",
+      "It always considers all possible solutions",
+      "It guarantees finding the optimal solution",
+      "It uses dynamic programming"
+    ],
+    "answer":"It always considers all possible solutions"
+  },
+  {
+    "q":"What does NP stand for in the context of computational complexity?",
+    "options":[
+      "Non-deterministic Polynomial time",
+      "Non-deterministic Polynomial space",
+      "Non-deterministic Power",
+      "Non-deterministic Processing"
+    ],
+    "answer":"Non-deterministic Polynomial time"
+  },
+  {
+    "q":"Which of the following algorithms can be used to solve the Knapsack problem efficiently?",
+    "options":[
+      "Greedy algorithms",
+      "Dynamic programming",
+      "Brute force",
+      "Divide and conquer"
+    ],
+    "answer":"Dynamic programming"
+  },
+    {
+    "q": "A user has designed an interface for a binary tree abstract data type (ADT). Which method below requires knowledge of the purpose and organization of the binary tree in order to design an implementation?",
+    "options": [
+      "find",
+      "add",
+      "contains",
+      "isEmpty",
+      "size"
+    ],
+    "answer": "find"
+  },
+  {
+    "q": "A tree in which every node can have at most n children is referred to as a __________________ tree.",
+    "options": [
+      "binary",
+      "ternary",
+      "n-ary",
+      "general",
+      "graph"
+    ],
+    "answer": "n-ary"
+  },
+  {
+    "q": "Which of the following best describes a balanced tree?",
+    "options": [
+      "A balanced tree has all nodes at exactly the same level.",
+      "A balanced tree has no nodes at exactly the same level.",
+      "A balanced tree has half of the nodes at one level and half the nodes at another level.",
+      "A balanced tree has all of the nodes within one level of each other.",
+      "none of the above correctly describe a balanced tree."
+    ],
+    "answer": "A balanced tree has all of the nodes within one level of each other."
+  },
+  {
+    "q": "A full binary tree of height n has _________________ leaves.",
+    "options": [
+      "2n",
+      "3n",
+      "2^n",
+      "2^(n+1)",
+      "3^(n+1)"
+    ],
+    "answer": "2^n"
+  },
+  {
+    "q": "Which of the following tree traversals traverses the subtrees from left to right and then visits the root?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "none of the above"
+    ],
+    "answer": "Postorder"
+  },
+  {
+    "q": "Which of the following traversals is not easily implemented recursively?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "all of the above are easily implemented recursively"
+    ],
+    "answer": "Level-order"
+  },
+  {
+    "q": "Which of the following traversals is implemented using a queue as a supporting data structure?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "none of the above are implemented using a queue"
+    ],
+    "answer": "Level-order"
+  },
+  {
+    "q": "One method of implementing a tree using an array involves storing the child of the element at the index n in the array at indexes ______________________________ .",
+    "options": [
+      "n+1 and n+2",
+      "2n and 22n",
+      "2n+1 and 2n+2",
+      "n-1 and n-2",
+      "none of the above will work"
+    ],
+    "answer": "2n+1 and 2n+2"
+  },
+  {
+    "q": "What property of the tree does its order specify?",
+    "options": [
+      "maximum height",
+      "maximum number of leaves",
+      "maximum number of internal nodes",
+      "maximum number of edges",
+      "maximum number of children per node"
+    ],
+    "answer": "maximum number of children per node"
+  },
+  {
+    "q": "A balanced binary tree with m elements will have height ______________ .",
+    "options": [
+      "2m",
+      "2^m",
+      "logm 2",
+      "log2 m",
+      "none of the above"
+    ],
+    "answer": "log2 m"
+  },
+
+  {
+    "q": "A _________________ can be used as the basis for an expert system.",
+    "options": [
+      "queue",
+      "stack",
+      "ternary tree",
+      "4-ary tree",
+      "decision tree"
+    ],
+    "answer": "decision tree"
+  },
+  {
+    "q": "Which of the following traversals visits the root before visiting the left and right subtrees?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "none of the above"
+    ],
+    "answer": "Preorder"
+  },
+  {
+    "q": "The find method to locate an element in a binary tree can be implemented",
+    "options": [
+      "iteratively",
+      "recursively",
+      "independently",
+      "both A. and B. are correct",
+      "all of A., B., and C. are correct"
+    ],
+    "answer": "both A. and B. are correct"
+  },
+  {
+    "q": "Which of the following traversals never visits the root?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "none of the above"
+    ],
+    "answer": "none of the above"
+  },
+  {
+    "q": "Which of the following traversals visits the nodes that are closer to the top of the tree before visiting those that are closer to the bottom?",
+    "options": [
+      "Preorder",
+      "Inorder",
+      "Postorder",
+      "Level-order",
+      "none of the above"
+    ],
+    "answer": "Level-order"
+  },
+  {
+    "q": "In a tree, a node that does not have any children is called a leaf.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "The height of a tree and the depth of a tree are different.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "A binary tree is a tree in which any node can have at most two children.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Since trees are nonlinear structures, it is impossible to implement them using an array.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "The methods in the Binary Tree ADT all return references to elements.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+   {
+    "q": "There are four basic ways to traverse a tree, and they are all implemented recursively.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "A decision tree cannot be used as the basis for an expert system.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "In an inorder traversal, the elements of a tree are visited in order of their distance from the root.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "In a postorder traversal, the root is the last element visited in the tree.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Recursive methods that work with binary trees are often implemented with a private support method.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "________ is the process of finding a designated target element within a group of items.",
+    "options": [
+      "Sorting",
+      "Searching",
+      "Recursing",
+      "Helping",
+      "None of the above"
+    ],
+    "answer": "Searching"
+  },
+  {
+    "q": "As the number of items in a search pool grows, the number of comparisons required to search _______________ .",
+    "options": [
+      "increases",
+      "decreases",
+      "stays the same",
+      "goes to 0",
+      "none of the above"
+    ],
+    "answer": "increases"
+  },
+  {
+    "q": "A _______________ search is more efficient than a linear search.",
+    "options": [
+      "binary",
+      "selection",
+      "insertion",
+      "bubble",
+      "none of the above"
+    ],
+    "answer": "binary"
+  },
+  {
+    "q": "In a binary search, _______________________________ .",
+    "options": [
+      "it is assumed that all of the elements are integers",
+      "it is assumed that all of the elements are Strings",
+      "it is assumed that the search pool is small",
+      "it is assumed that the search pool is ordered",
+      "it is assumed that the search pool is large"
+    ],
+    "answer": "it is assumed that the search pool is ordered"
+  },
+  {
+    "q": "_____________________ is the process of arranging a group of items into a defined order.",
+    "options": [
+      "Searching",
+      "Sorting",
+      "Selecting",
+      "Helping",
+      "none of the above"
+    ],
+    "answer": "Sorting"
+  },
+  {
+    "q": "Which of the following is not a sorting algorithm?",
+    "options": [
+      "Bubble sort",
+      "Quick sort",
+      "Merge sort",
+      "Selection sort",
+      "all of the above are sorting algorithms"
+    ],
+    "answer": "all of the above are sorting algorithms"
+  },
+  {
+    "q": "Which data structures are used by a radix sort?",
+    "options": [
+      "stacks",
+      "queues",
+      "heaps",
+      "both A. and B. are correct",
+      "A., B., and C. are all correct"
+    ],
+    "answer": "both A. and B. are correct"
+  },
+  {
+    "q": "The ___________________ algorithm sorts values by repeatedly comparing neighboring elements in the list and swapping their position if they are not in order relative to each other.",
+    "options": [
+      "insertion sort",
+      "selection sort",
+      "bubble sort",
+      "quick sort",
+      "merge sort"
+    ],
+    "answer": "bubble sort"
+  },
+  {
+    "q": "The __________________ algorithm sorts a list of values by repetitively inserting a particular value into a subset of the list that has already been sorted.",
+    "options": [
+      "insertion sort",
+      "selection sort",
+      "bubble sort",
+      "quick sort",
+      "merge sort"
+    ],
+    "answer": "insertion sort"
+  },
+  {
+    "q": "The ___________________ is the number of possible values of the digits or characters in a sort key.",
+    "options": [
+      "radix",
+      "asymptote",
+      "thread",
+      "order",
+      "none of the above"
+    ],
+    "answer": "radix"
+  },
+  {
+    "q": "________ can be used to sort the same set of objects in multiple ways.",
+    "options": [
+      "insertion sort",
+      "selection sort",
+      "bubble sort",
+      "random sort",
+      "Comparator objects"
+    ],
+    "answer": "Comparator objects"
+  },
+  {
+    "q": "In order to compare objects of a class in different ways,",
+    "options": [
+      "the class must implement the Comparable interface",
+      "the class must implement the Comparator interface",
+      "the class must inherit from the Comparator class",
+      "a separate class must be created that implements the Comparator interface and provides a body for the compare method",
+      "None of these is correct"
+    ],
+    "answer": "a separate class must be created that implements the Comparator interface and provides a body for the compare method"
+  },
+  {
+    "q": "Suppose we have algorithms that solve a particular problem that have the following complexities. Which one is most efficient?",
+    "options": [
+      "O(1)",
+      "O(log2n)",
+      "O(n2)",
+      "O(n3)",
+      "O(2n)"
+    ],
+    "answer": "O(1)"
+  },
+  {
+    "q": "Which of the following algorithms has a worst case complexity of O(n log2n)?",
+    "options": [
+      "insertion sort",
+      "selection sort",
+      "bubble sort",
+      "merge sort",
+      "none of the above"
+    ],
+    "answer": "merge sort"
+  },
+  {
+    "q": "In a radix sort, the radix is the number of elements to be sorted.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "The underlying data structure used in a radix sort is a stack.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "A linear search always requires more comparisons than a binary search.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "If there are more items in a search pool, then it will typically require more comparisons to find an item.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Bubble sort is the most efficient searching algorithm.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "Quick sort works by separating a list into two lists, and recursively sorting the two lists using quick sort.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "The sort method of the Arrays class sorts the elements of an array by using a comparator.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Implementing the Comparator interface requires writing a body for the compareTo method.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "With each comparison, a binary search eliminates approximately half of the items remaining in the search pool.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "The selection sort algorithm sorts a list of values by repeatedly putting a particular value into its final, sorted position.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "A method that calls itself is a __________________ method.",
+    "options": [
+      "invalid",
+      "static",
+      "final",
+      "recursive",
+      "public"
+    ],
+    "answer": "recursive"
+  },
+   {
+    "q": "____________________ recursion occurs when a method calls itself, while _________________ recursion occurs when a method calls another method that then calls the original method.",
+    "options": [
+      "upward, downward",
+      "downward, upward",
+      "direct, indirect",
+      "indirect, direct",
+      "none of the above"
+    ],
+    "answer": "direct, indirect"
+  },
+  {
+    "q": "__________________ recursion results from the lack of a base case.",
+    "options": [
+      "Indirect",
+      "Direct",
+      "Infinite",
+      "Spiral",
+      "none of the above"
+    ],
+    "answer": "Infinite"
+  },
+  {
+    "q": "The _______________________ puzzle is a favorite of computer scientists because of its elegant recursive solution.",
+    "options": [
+      "Tower of Hanoi",
+      "Sudoku",
+      "Tetris",
+      "Tic-Tac-Toe",
+      "none of the above"
+    ],
+    "answer": "Tower of Hanoi"
+  },
+  {
+    "q": "In the Towers of Hanoi puzzle, there are ________________ pegs.",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "The Towers of Hanoi puzzle can include any number of pegs"
+    ],
+    "answer": "3"
+  },
+  {
+    "q": "In indirect recursion, how many method calls can occur between one call to a method and the next one that completes the indirect recursion?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "There is no limit to the number of intervening calls between a method and its indirect recursive call."
+    ],
+    "answer": "There is no limit to the number of intervening calls between a method and its indirect recursive call."
+  },
+  {
+    "q": "Which of the following statements is true?",
+    "options": [
+      "Recursion should be used in every program.",
+      "Recursion should be avoided all the time.",
+      "Solutions that are easily expressed recursively should be programmed recursively.",
+      "Solutions that are easily expressed recursively should be programmed iteratively.",
+      "None of the above."
+    ],
+    "answer": "Solutions that are easily expressed recursively should be programmed recursively."
+  },
+  {
+    "q": "Which of the following will result from infinite recursion in Java?",
+    "options": [
+      "The program will hang as though there is an infinite loop.",
+      "The program will throw an ArrayOutOfBoundsException.",
+      "The program will not compile.",
+      "The program will run out of memory.",
+      "none of the above."
+    ],
+    "answer": "The program will run out of memory."
+  },
+  {
+    "q": "How many base cases must a recursive method have?",
+    "options": [
+      "A recursive method does not have to have a base case.",
+      "at least 1",
+      "more than 1",
+      "more than 2",
+      "more than 3"
+    ],
+    "answer": "at least 1"
+  },
+  {
+    "q": "All recursive programs ____________________________________ .",
+    "options": [
+      "are more difficult to read than iterative programs.",
+      "can be implemented iteratively.",
+      "are easier to read than iterative programs.",
+      "are shorter than iterative programs.",
+      "none of the above are true."
+    ],
+    "answer": "can be implemented iteratively."
+  },
+  {
+    "q": "The recursive solution of the Towers of Hanoi problem has _______________ complexity.",
+    "options": [
+      "exponential",
+      "polynomial",
+      "logarithmic",
+      "low",
+      "none of the above"
+    ],
+    "answer": "exponential"
+  },
+  {
+    "q": "Which of the following is a proper recursive definition of x raised to the y power?",
+    "options": [
+      "x^y=x*x^(y-1)",
+      "x^y=x*x^(y-2)",
+      "x^y=x*x^(y-1) for y > 1; x^y = x for y = 1",
+      "x^y=x*x^(y-1) for all x",
+      "none of the above"
+    ],
+    "answer": "x^y=x*x^(y-1) for y > 1; x^y = x for y = 1"
+  },
+  {
+    "q": "There is (are) ____________ base case(s) in the recursive solution to finding a path through a maze.",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": "2"
+  },
+  {
+    "q": "A solution with exponential complexity is ____________________ .",
+    "options": [
+      "efficient",
+      "inefficient",
+      "easy to implement",
+      "difficult to implement",
+      "none of the above"
+    ],
+    "answer": "inefficient"
+  },
+  {
+    "q": "In a recursive solution, _______________ is (are) always necessary.",
+    "options": [
+      "short, efficient code",
+      "several variables",
+      "numerous lines of code",
+      "a base case",
+      "none of the above"
+    ],
+    "answer": "a base case"
+  },
+  {
+    "q": "In Java, it is possible for a method to call itself.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Some problems can only be solved recursively.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "All recursive methods must have a base case.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "A method that calls a different method, which then calls the original calling method, is a recursive method.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Recursive solutions to problems should be used whenever possible.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "In the Towers of Hanoi puzzle, it is legal to move a larger disk to a peg that already contains a smaller disk.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "The Towers of Hanoi puzzle cannot be solved iteratively.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "Determining whether or not there is a path through a maze has a recursive solution.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "A program with infinite recursion will act similarly to a program with an infinite loop.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "Recursive solutions are always more efficient than iterative solutions.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "An iterator is",
+    "options": [
+      "an element in a collection.",
+      "an object that allows access to each element in a collection individually.",
+      "an interface",
+      "a loop control variable",
+      "a five syllable word"
+    ],
+    "answer": "an object that allows access to each element in a collection individually."
+  },
+  {
+    "q": "Which method below is not part of the Iterator interface?",
+    "options": [
+      "add",
+      "remove",
+      "next",
+      "hasNext",
+      "all of these are methods in the Iterator interface."
+    ],
+    "answer": "add"
+  },
+  {
+    "q": "The only method in the Iterable interface is",
+    "options": [
+      "create",
+      "iterator",
+      "destroy",
+      "remove",
+      "hasNext"
+    ],
+    "answer": "iterator"
+  },
+  {
+    "q": "When writing a class for an array-based implementation of a list, the class that defines an iterator for the list should be",
+    "options": [
+      "public",
+      "iterable",
+      "an interface",
+      "an inner class",
+      "none of the above"
+    ],
+    "answer": "an inner class"
+  },
+  {
+    "q": "A user defines a class to implement an iterator for a user-defined collection. When an iterator object is created, it needs to know",
+    "options": [
+      "when it was created",
+      "why it was created",
+      "the number of elements in the collection",
+      "the datatype of the elements in the collection",
+      "none of the above"
+    ],
+    "answer": "the number of elements in the collection"
+  },
+  {
+    "q": "Using the hasNext() and next() methods in a loop is the only way to retrieve all of the list elements using an iterator.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "A user may not be able to predict the order in which an iterator will return elements from a collection.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "‘Fail-fast’ means that a program will crash if a collection class supports the Iterable interface but no Iterator object is created.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "An iterator’s remove method requires the use of a for-each loop.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "When a user writes code to implement a collection class that implements the Iterable interface, they have to write code for the next and hasNext methods.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "False"
+  },
+  {
+    "q": "When a user defines an Iterator class for a user-defined collection, the user must implement the methods in the Iterator interface in a way that detects if the collection is modified independent of the iterator object.",
+    "options": [
+      "True",
+      "False"
+    ],
+    "answer": "True"
+  },
+  {
+    "q": "A(n) _____________________ is a list collection that has elements that are ordered by a characteristic of the elements.",
+    "options": [
+      "ordered list",
+      "unordered list",
+      "indexed list",
+      "linked list",
+      "array"
+    ],
+    "answer": "ordered list"
+  },
+  {
+    "q": "A(n) _____________________ is a list collection whose elements can be referenced using a numeric index.",
+    "options": [
+      "ordered list",
+      "unordered list",
+      "indexed list",
+      "linked list",
+      "array"
+    ],
+    "answer": "indexed list"
+  },
+  {
+    "q": "Which operation below is not part of the List interface?",
+    "options": [
+      "add an element to the list",
+      "remove an element from the list",
+      "replace an element in the list with another element",
+      "get the size of the list",
+      "grow the size of the list"
+    ],
+    "answer": "grow the size of the list"
+  },
+  {
+    "q": "The List interface is implemented by the ________ class.",
+    "options": [
+      "array",
+      "ArrayList",
+      "String",
+      "Object",
+      "Exception"
+    ],
+    "answer": "ArrayList"
+  },
+  {
+    "q": "The List ADT (Abstract Data Type) provides how many operations to remove an element from a list?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "more than 4"
+    ],
+    "answer": "2"
+  },
+
+
+
+
+];
+
+let questions = [];
+let userAnswers = [];
+let results = [];
+let currentPage = 0;
+let totalQuestions = 0;
+let timerInterval;
+let quizSubmitted = false;
+const pageSize = 5;
+
+// SHUFFLE
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+// START QUIZ
+function startQuiz(){
+  const count = parseInt(document.getElementById("range").value);
+  const minutes = parseInt(document.getElementById("timeLimit").value);
+
+  if(!count || !minutes || count > questionsOriginal.length){
+    alert("Enter valid number of questions and time.");
+    return;
+  }
+
+  clearInterval(timerInterval);
+  document.getElementById("scoreBox").innerHTML="";
+  document.getElementById("timer").innerText="";
+  document.getElementById("submitAll").style.display="none";
+
+  questions = shuffle([...questionsOriginal]).slice(0,count);
+  totalQuestions = questions.length;
+  userAnswers = Array(totalQuestions).fill("");
+  results = Array(totalQuestions).fill(null);
+  quizSubmitted = false;
+  currentPage = 0;
+
+  loadPage();
+  startTimer(minutes*60);
+}
+
+// TIMER
+function startTimer(seconds){
+  timerInterval = setInterval(()=>{
+    let m=Math.floor(seconds/60);
+    let s=seconds%60;
+
+    document.getElementById("timer").innerText=
+      `Time Left: ${m}:${s.toString().padStart(2,'0')}`;
+
+    if(seconds <= 0){
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
+    seconds--;
+  },1000);
+}
+
+// LOAD PAGE
+function loadPage(){
+  const area = document.getElementById("quizArea");
+  area.innerHTML="";
+
+  const start=currentPage*pageSize;
+  const end=Math.min(start+pageSize,totalQuestions);
+
+  for(let i=start;i<end;i++){
+    let disabled = quizSubmitted ? "disabled" : "";
+    let optionsHtml = questions[i].options.map(opt =>
+      `<label>
+         <input type="radio" name="q${i}" value="${opt}" ${userAnswers[i]===opt?"checked":""} ${disabled} 
+           onclick="saveAnswer(${i},'${opt}')"> ${opt}
+       </label><br>`
+    ).join("");
+
+    area.innerHTML+=`
+      <div class="question-box">
+        <p><b>Q${i+1}.</b> ${questions[i].q}</p>
+        ${optionsHtml}
+        <div class="feedback ${results[i]===true?'correct':results[i]===false?'wrong':''}" id="fb${i}">
+          ${results[i]===true ? "Correct!" :
+            results[i]===false ? "Wrong! Correct: "+questions[i].answer : ""}
+        </div>
+      </div>`;
+  }
+
+  document.getElementById("prevBtn").style.display =
+    currentPage===0 ? "none":"inline-block";
+
+  document.getElementById("nextBtn").style.display =
+    end===totalQuestions ? "none":"inline-block";
+
+  checkIfAllAnswered();
+}
+
+// SAVE ANSWER
+function saveAnswer(index,value){
+  userAnswers[index] = value;
+  checkIfAllAnswered();
+}
+
+// CHECK IF ALL ANSWERED
+function checkIfAllAnswered(){
+  const allAnswered = userAnswers.every(ans => ans !== "");
+  if(!quizSubmitted){
+    document.getElementById("submitAll").style.display =
+      allAnswered ? "block" : "none";
+  }
+}
+
+// NAVIGATION
+function prevPage(){
+  if(currentPage>0){
+    currentPage--;
+    loadPage();
+  }
+}
+
+function nextPage(){
+  if((currentPage+1)*pageSize<totalQuestions){
+    currentPage++;
+    loadPage();
+  }
+}
+
+// SUBMIT QUIZ
+function submitQuiz(){
+  if(quizSubmitted) return;
+
+  clearInterval(timerInterval);
+  quizSubmitted = true;
+
+  let score=0;
+
+  for(let i=0;i<totalQuestions;i++){
+    const correct = userAnswers[i] === questions[i].answer;
+    results[i] = correct;
+    if(correct) score++;
+  }
+
+  document.getElementById("submitAll").style.display="none";
+  document.getElementById("scoreBox").innerHTML=
+    `Your Score: ${score} / ${totalQuestions}`;
+
+  loadPage();
+}
+</script>
+
+</body>
+</html>
